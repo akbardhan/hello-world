@@ -1,0 +1,117 @@
+---
+title: "Class 3 Workbook: Data visualization"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    df_print: paged
+    theme: spacelab 
+    toc: yes
+urlcolor: blue
+---
+
+Reading an Excel data file 
+```{r}
+# Must Load library 'readxl'
+library("readxl")
+# If you know the path of the .xls or xlsk file 
+#mydata1 <- read_excel("my_file.xls")
+# It’s also possible to choose a file interactively
+mydata2 <- read_excel(file.choose())
+```
+
+By default, read_excel would import the content of the first sheet of the file. To import other sheets, specific instructions need to be added as follows:
+```{r}
+# Specify sheet by its name
+#mydata3 <- read_excel("my_file.xlsx", sheet = "data")
+  
+# Specify sheet by its index
+#mydata4 <- read_excel("my_file.xlsx", sheet = 2)
+```
+
+
+```{r}
+summary(mydata2$age)
+```
+
+
+Quick code to generate a histogram and a density plot
+
+```{r}
+tmp <- density(mydata2$age)
+hist(mydata2$age, prob = TRUE, ylim = c(0, max(tmp$y)))
+lines(tmp, col = "blue", lty = 2, lwd = 4) # lty if line type and lwd it's thickness
+```
+ 
+The following code adds little more details to the histogram.
+
+```{r}
+temp <- density(mydata2$age)
+hist(mydata2$age, # histogram
+ col="peachpuff", # column color
+ border="black",
+ freq = F, #freq = F or T (for relative frequencies (densities) or frequency resp.)
+ breaks = 9,
+ prob = TRUE, # show densities instead of frequencies
+ xlab = "Age at admission",
+ main = "Age data",
+ ylab="Relative Frequency / Density",
+ ylim = c(0, max(tmp$y))) #specifying ylim (sets the limits of Y-a) solves the problem of the top of density curve getting cut by title
+ 
+lines(temp, # density plot
+ lwd = 2, # thickness of line
+ col = "chocolate3")
+```
+```{r}
+head(mydata2,n = 4)
+summary(mydata2$charges)
+summary(mydata2$claim)
+```
+
+
+Two histograms side-by-side
+```{r}
+#png("hospitaldata.png") #output image file will be saved in the working directory
+#par(oma=c(0,0,2,0))
+layout(matrix(c(1:2), 2, 1,
+ byrow = TRUE))
+hist(mydata2$charges, # histogram
+ col = "peachpuff", # column color
+ border = "black",
+ prob = TRUE, # show densities instead of frequencies
+ #xlim = c(36,38.5),
+ xlab = "Amount",
+ main = "Charges")
+lines(density(mydata2$charges), # density plot
+ lwd = 2, # thickness of line
+ col = "chocolate3")
+hist(mydata2$claim, # histogram
+ col = "peachpuff", # column color
+ border = "black",
+ prob = TRUE, # show densities instead of frequencies
+ #xlim = c(36,38.5),
+ xlab = "Amount",
+ main = "Claim")
+lines(density(mydata2$claim), # density plot
+ lwd = 2, # thickness of line
+ col = "chocolate3")
+#dev.off()
+```
+
+```{r}
+x <- rexp(1000, 0.2)
+tmp <- density(x)
+hist(x, prob = TRUE, ylim = c(0, max(tmp$y)))
+lines(tmp, col = "blue", lty = 3, lwd = 2)
+```
+
+
+
+
+
+
+
+
+
+
+
